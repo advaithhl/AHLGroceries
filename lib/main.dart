@@ -32,9 +32,39 @@ class _StorePageState extends State<StorePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Column(
+        children: [
+          StoreWidget("Store1"),
+          StoreWidget("Store2"),
+          StoreWidget("Store3"),
+          StoreWidget("Store4"),
+          StoreWidget("Store5"),
+        ],
+      ),
+    );
+  }
+}
+
+/// A StatelessWidget to represent a single store.
+class StoreWidget extends StatelessWidget {
+  final String storeName;
+
+  const StoreWidget(this.storeName);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        color: Colors.blue,
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(5),
+        alignment: Alignment.center,
         child: Text(
-          "Text"
+          this.storeName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
         ),
       ),
     );
