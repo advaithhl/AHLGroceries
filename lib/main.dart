@@ -17,20 +17,19 @@ class AHLGroceries extends StatelessWidget {
   }
 }
 
-class StoreListPage extends StatefulWidget {
+/// A StatelessWidget which displays all storenames.
+///
+/// Note: [StoreListPage] is a StatelessWidget because the stores and their
+/// names are constants.
+class StoreListPage extends StatelessWidget {
   StoreListPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _StoreListPageState createState() => _StoreListPageState();
-}
-
-class _StoreListPageState extends State<StoreListPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(this.title),
       ),
       body: Column(
         children: [
