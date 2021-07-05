@@ -12,20 +12,20 @@ class AHLGroceries extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: StorePage(title: 'AHL Groceries'),
+      home: StoreListPage(title: 'AHL Groceries'),
     );
   }
 }
 
-class StorePage extends StatefulWidget {
-  StorePage({Key? key, required this.title}) : super(key: key);
+class StoreListPage extends StatefulWidget {
+  StoreListPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _StorePageState createState() => _StorePageState();
+  _StoreListPageState createState() => _StoreListPageState();
 }
 
-class _StorePageState extends State<StorePage> {
+class _StoreListPageState extends State<StoreListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +34,11 @@ class _StorePageState extends State<StorePage> {
       ),
       body: Column(
         children: [
-          StoreWidget("Store1"),
-          StoreWidget("Store2"),
-          StoreWidget("Store3"),
-          StoreWidget("Store4"),
-          StoreWidget("Store5"),
+          StoreListPageItem("Store1"),
+          StoreListPageItem("Store2"),
+          StoreListPageItem("Store3"),
+          StoreListPageItem("Store4"),
+          StoreListPageItem("Store5"),
         ],
       ),
     );
@@ -46,10 +46,10 @@ class _StorePageState extends State<StorePage> {
 }
 
 /// A StatelessWidget to represent a single store.
-class StoreWidget extends StatelessWidget {
+class StoreListPageItem extends StatelessWidget {
   final String storeName;
 
-  const StoreWidget(this.storeName);
+  const StoreListPageItem(this.storeName);
 
   @override
   Widget build(BuildContext context) {
