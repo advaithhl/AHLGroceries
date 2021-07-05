@@ -24,6 +24,14 @@ class AHLGroceries extends StatelessWidget {
 class StoreListPage extends StatelessWidget {
   StoreListPage({Key? key, required this.title}) : super(key: key);
   final String title;
+  static const List<String> stores = [
+    'Daily Angadi',
+    'Lulu',
+    'Farm Mart',
+    'Supreme',
+    'Worldmart',
+    'Farmers',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +41,12 @@ class StoreListPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          StoreListPageItem("Store1"),
-          StoreListPageItem("Store2"),
-          StoreListPageItem("Store3"),
-          StoreListPageItem("Store4"),
-          StoreListPageItem("Store5"),
+          StoreListPageItem(stores[0]),
+          StoreListPageItem(stores[1]),
+          StoreListPageItem(stores[2]),
+          StoreListPageItem(stores[3]),
+          StoreListPageItem(stores[4]),
+          StoreListPageItem(stores[5]),
         ],
       ),
     );
