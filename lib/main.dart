@@ -67,11 +67,13 @@ class StoreListPageItem extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.all(5),
         alignment: Alignment.center,
-        child: Text(
-          this.storeName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 30,
+        child: FittedBox(
+          child: Text(
+            this.storeName,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+            ),
           ),
         ),
       ),
