@@ -62,19 +62,46 @@ class StoreListPageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        color: Colors.blue,
-        padding: const EdgeInsets.all(20),
-        margin: const EdgeInsets.all(5),
-        alignment: Alignment.center,
-        child: FittedBox(
-          child: Text(
-            this.storeName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 30,
+      child: InkWell(
+        child: Container(
+          color: Colors.blue,
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(5),
+          alignment: Alignment.center,
+          child: FittedBox(
+            child: Text(
+              this.storeName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
             ),
           ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => StorePage()),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class StorePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
         ),
       ),
     );
