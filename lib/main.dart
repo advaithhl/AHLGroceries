@@ -1,3 +1,4 @@
+import 'package:ahl_groceries/storepage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -84,25 +85,6 @@ class StoreListPageItem extends StatelessWidget {
             MaterialPageRoute(builder: (context) => StorePage()),
           );
         },
-      ),
-    );
-  }
-}
-
-class StorePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
       ),
     );
   }
