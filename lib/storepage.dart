@@ -34,15 +34,16 @@ class _StorePageState extends State<StorePage> {
         title: Text("Second Route"),
       ),
       body: Center(
-        child: ReorderableListView(
-          children: [
-            for (final item in widget.myItems)
-              ListTile(
+        child: ReorderableListView.builder(
+          itemCount: widget.myItems.length,
+          onReorder: reorderData,
+          itemBuilder: (BuildContext context, int index) {
+            var item = widget.myItems[index];
+            return ListTile(
                 key: ValueKey(item),
                 title: Text(item),
-              ),
-          ],
-          onReorder: reorderData,
+            );
+          },
         ),
       ),
     );
