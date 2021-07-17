@@ -39,9 +39,17 @@ class _StorePageState extends State<StorePage> {
           onReorder: reorderData,
           itemBuilder: (BuildContext context, int index) {
             var item = widget.myItems[index];
-            return ListTile(
+            return Dismissible(
+              key: ValueKey(item),
+              child: ListTile(
                 key: ValueKey(item),
                 title: Text(item),
+              ),
+              onDismissed: (direction) {
+                setState(() {
+                  widget.myItems.removeAt(index);
+                });
+              },
             );
           },
         ),
