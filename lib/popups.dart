@@ -79,6 +79,7 @@ class _PopupCardState extends State<PopupCard> {
                             flex: 1,
                             fit: FlexFit.tight,
                             child: FloatingActionButton(
+                              heroTag: null,
                               child: Icon(
                                 Icons.remove,
                                 color: Colors.black,
@@ -107,6 +108,7 @@ class _PopupCardState extends State<PopupCard> {
                             flex: 1,
                             fit: FlexFit.tight,
                             child: FloatingActionButton(
+                              heroTag: null,
                               child: Icon(
                                 Icons.add,
                                 color: Colors.black,
