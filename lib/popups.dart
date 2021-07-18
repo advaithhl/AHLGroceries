@@ -64,7 +64,63 @@ class _PopupCardState extends State<PopupCard> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(widget.item)
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(widget.item),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 0.5,
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: FloatingActionButton(
+                              child: Icon(
+                                Icons.remove,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {},
+                              backgroundColor: Colors.deepOrange,
+                            ),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.tight,
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 100,
+                              child: Center(
+                                child: Text(
+                                  '9999',
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: FloatingActionButton(
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {},
+                              backgroundColor: Colors.deepOrange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),
