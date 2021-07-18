@@ -1,3 +1,4 @@
+import 'package:ahl_groceries/popups.dart';
 import 'package:flutter/material.dart';
 
 class StorePage extends StatefulWidget {
@@ -44,6 +45,15 @@ class _StorePageState extends State<StorePage> {
               child: ListTile(
                 key: ValueKey(item),
                 title: Text(item),
+                onTap: () {
+                  Navigator.of(context).push(
+                    PopupCardRoute(
+                      builder: (context) => PopupCard(
+                        item: item,
+                      ),
+                    ),
+                  );
+                },
               ),
               onDismissed: (direction) {
                 setState(() {
