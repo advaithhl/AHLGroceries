@@ -28,6 +28,21 @@ class _StorePageState extends State<StorePage> {
     });
   }
 
+  void _showPopupCardRoute(BuildContext context, int index) async {
+    var item = widget.myItems[index];
+    final double itemQuantity = await Navigator.of(context).push(
+      PopupCardRoute(
+        builder: (context) => PopupCard(
+          item: item,
+        ),
+      ),
+    );
+    final snackBar = SnackBar(content: Text('$item set to $itemQuantity'));
+    Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,13 +61,7 @@ class _StorePageState extends State<StorePage> {
                 key: ValueKey(item),
                 title: Text(item),
                 onTap: () {
-                  Navigator.of(context).push(
-                    PopupCardRoute(
-                      builder: (context) => PopupCard(
-                        item: item,
-                      ),
-                    ),
-                  );
+                  _showPopupCardRoute(context, index);
                 },
               ),
               onDismissed: (direction) {

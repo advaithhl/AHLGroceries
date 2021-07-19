@@ -14,7 +14,7 @@ class PopupCardRoute<T> extends PageRoute<T> {
   bool get opaque => false;
 
   @override
-  bool get barrierDismissible => true;
+  bool get barrierDismissible => false;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
@@ -51,6 +51,8 @@ class PopupCard extends StatefulWidget {
 }
 
 class _PopupCardState extends State<PopupCard> {
+  double itemQuantity = 1;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -84,7 +86,11 @@ class _PopupCardState extends State<PopupCard> {
                                 Icons.remove,
                                 color: Colors.black,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  itemQuantity--;
+                                });
+                              },
                               backgroundColor: Colors.deepOrange,
                             ),
                           ),
@@ -96,7 +102,7 @@ class _PopupCardState extends State<PopupCard> {
                               height: 100,
                               child: Center(
                                 child: Text(
-                                  '9999',
+                                  '$itemQuantity',
                                   style: TextStyle(
                                     fontSize: 40,
                                   ),
@@ -113,13 +119,30 @@ class _PopupCardState extends State<PopupCard> {
                                 Icons.add,
                                 color: Colors.black,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  itemQuantity++;
+                                });
+                              },
                               backgroundColor: Colors.deepOrange,
                             ),
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 0.5,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => Navigator.of(context).pop(itemQuantity),
+                      icon: const Icon(Icons.save),
+                      label: const Text('Save'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.deepOrange,
+                        onPrimary: Colors.black,
+                      ),
+                    ),
                   ],
                 ),
               ),
