@@ -41,14 +41,7 @@ class StoreListPage extends StatelessWidget {
         title: Text(this.title),
       ),
       body: Column(
-        children: [
-          StoreListPageItem(stores[0]),
-          StoreListPageItem(stores[1]),
-          StoreListPageItem(stores[2]),
-          StoreListPageItem(stores[3]),
-          StoreListPageItem(stores[4]),
-          StoreListPageItem(stores[5]),
-        ],
+        children: [for (String store in stores) StoreListPageItem(store)],
       ),
     );
   }
