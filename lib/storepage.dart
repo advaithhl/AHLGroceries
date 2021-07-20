@@ -1,5 +1,7 @@
 import 'package:ahl_groceries/popups.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:io' show Platform;
 
 class StorePage extends StatefulWidget {
   final List<String> myItems = [
@@ -28,6 +30,12 @@ class _StorePageState extends State<StorePage> {
     });
   }
 
+  /// Share the list, if user taps on share button.
+  void shareList() {
+    String shareText = widget.myItems.join("\n");
+    Share.share(shareText);
+  }
+
   void _showPopupCardRoute(BuildContext context, int index) async {
     var item = widget.myItems[index];
     final double itemQuantity = await Navigator.of(context).push(
@@ -39,8 +47,13 @@ class _StorePageState extends State<StorePage> {
     );
     final snackBar = SnackBar(content: Text('$item set to $itemQuantity'));
     Scaffold.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(snackBar);
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  Icon _getShareIcon() {
+    if (Platform.isAndroid) return Icon(Icons.share);
+    return Icon(Icons.ios_share);
   }
 
   @override
@@ -48,6 +61,12 @@ class _StorePageState extends State<StorePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Second Route"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: shareList,
+            icon: _getShareIcon(),
+          ),
+        ],
       ),
       body: Center(
         child: ReorderableListView.builder(
