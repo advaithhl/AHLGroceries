@@ -19,6 +19,9 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
+  late TextEditingController _newItemTextFieldController =
+      TextEditingController();
+
   /// Update backend list on reordering.
   void reorderData(int oldIndex, int newIndex) {
     setState(() {
@@ -68,29 +71,56 @@ class _StorePageState extends State<StorePage> {
           ),
         ],
       ),
-      body: Center(
-        child: ReorderableListView.builder(
-          itemCount: widget.myItems.length,
-          onReorder: reorderData,
-          itemBuilder: (BuildContext context, int index) {
-            var item = widget.myItems[index];
-            return Dismissible(
-              key: ValueKey(item),
-              child: ListTile(
-                key: ValueKey(item),
-                title: Text(item),
-                onTap: () {
-                  _showPopupCardRoute(context, index);
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: ReorderableListView.builder(
+                itemCount: widget.myItems.length,
+                onReorder: reorderData,
+                itemBuilder: (BuildContext context, int index) {
+                  var item = widget.myItems[index];
+                  return Dismissible(
+                    key: ValueKey(item),
+                    child: ListTile(
+                      key: ValueKey(item),
+                      title: Text(item),
+                      onTap: () {
+                        _showPopupCardRoute(context, index);
+                      },
+                    ),
+                    onDismissed: (direction) {
+                      setState(() {
+                        widget.myItems.removeAt(index);
+                      });
+                    },
+                  );
                 },
               ),
-              onDismissed: (direction) {
-                setState(() {
-                  widget.myItems.removeAt(index);
-                });
-              },
-            );
-          },
-        ),
+            ),
+          ),
+          SizedBox(
+            height: 70,
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextField(
+                controller: _newItemTextFieldController,
+                decoration: InputDecoration(
+                  labelText: 'Tap here to add new item',
+                  hintText: 'New item',
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (String text) {
+                  print(text);
+                  setState(() {
+                    _newItemTextFieldController.text = '';
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
