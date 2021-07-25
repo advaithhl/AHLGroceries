@@ -4,15 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import 'dart:io' show Platform;
 
 class StorePage extends StatefulWidget {
-  final List<String> myItems = [
-    'Item name 1',
-    'Item name 2',
-    'Item name 3',
-    'Item name 4',
-    'Item name 5',
-    'Item name 6',
-    'Item name 7',
-  ];
+  final List<String> myItems = [];
 
   @override
   _StorePageState createState() => _StorePageState();
@@ -112,7 +104,8 @@ class _StorePageState extends State<StorePage> {
                   border: OutlineInputBorder(),
                 ),
                 onSubmitted: (String text) {
-                  print(text);
+                  if (!widget.myItems.contains(text))
+                    widget.myItems.add(text);
                   setState(() {
                     _newItemTextFieldController.text = '';
                   });
