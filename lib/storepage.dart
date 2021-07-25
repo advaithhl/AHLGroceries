@@ -57,10 +57,11 @@ class _StorePageState extends State<StorePage> {
       appBar: AppBar(
         title: Text("Second Route"),
         actions: <Widget>[
-          IconButton(
-            onPressed: shareList,
-            icon: _getShareIcon(),
-          ),
+          if (widget.myItems.length != 0)
+            IconButton(
+              onPressed: shareList,
+              icon: _getShareIcon(),
+            ),
         ],
       ),
       body: Column(
