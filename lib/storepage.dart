@@ -1,7 +1,7 @@
-import 'package:ahl_groceries/popups.dart';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:io' show Platform;
 
 class StorePage extends StatefulWidget {
   final List<String> myItems = [];
@@ -31,24 +31,36 @@ class _StorePageState extends State<StorePage> {
     Share.share(shareText);
   }
 
-  void _showPopupCardRoute(BuildContext context, int index) async {
-    var item = widget.myItems[index];
-    final double itemQuantity = await Navigator.of(context).push(
-      PopupCardRoute(
-        builder: (context) => PopupCard(
-          item: item,
-        ),
-      ),
-    );
-    final snackBar = SnackBar(content: Text('$item set to $itemQuantity'));
-    Scaffold.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackBar);
-  }
-
   Icon _getShareIcon() {
     if (Platform.isAndroid) return Icon(Icons.share);
     return Icon(Icons.ios_share);
+  }
+
+  Future<String> _showEditDialogue(String item) async {
+    late TextEditingController _editItemTextFieldController =
+        TextEditingController(text: item);
+    return await showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Edit item'),
+          content: TextField(
+            controller: _editItemTextFieldController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(_editItemTextFieldController.text);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -89,8 +101,11 @@ class _StorePageState extends State<StorePage> {
                           ),
                         ),
                       ),
-                      onTap: () {
-                        _showPopupCardRoute(context, index);
+                      onTap: () async {
+                        String editedValue = await _showEditDialogue(item);
+                        setState(() {
+                          widget.myItems[index] = editedValue;
+                        });
                       },
                     ),
                     onDismissed: (direction) {
