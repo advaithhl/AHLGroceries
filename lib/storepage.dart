@@ -76,7 +76,18 @@ class _StorePageState extends State<StorePage> {
                     key: ValueKey(item),
                     child: ListTile(
                       key: ValueKey(item),
-                      title: Text(item),
+                      title: Container(
+                        color: Colors.cyan,
+                        height: 80,
+                        child: Center(
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ),
+                      ),
                       onTap: () {
                         _showPopupCardRoute(context, index);
                       },
@@ -104,8 +115,7 @@ class _StorePageState extends State<StorePage> {
                   border: OutlineInputBorder(),
                 ),
                 onSubmitted: (String text) {
-                  if (!widget.myItems.contains(text))
-                    widget.myItems.add(text);
+                  if (!widget.myItems.contains(text)) widget.myItems.add(text);
                   setState(() {
                     _newItemTextFieldController.text = '';
                   });
