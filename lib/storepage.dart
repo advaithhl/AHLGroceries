@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -65,6 +66,8 @@ class _StorePageState extends State<StorePage> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference storeCollection =
+        FirebaseFirestore.instance.collection('testcoll');
     return Scaffold(
       appBar: AppBar(
         title: Text("Second Route"),
@@ -78,45 +81,51 @@ class _StorePageState extends State<StorePage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Center(
-              child: ReorderableListView.builder(
-                itemCount: widget.myItems.length,
-                onReorder: reorderData,
-                itemBuilder: (BuildContext context, int index) {
-                  var item = widget.myItems[index];
-                  return Dismissible(
-                    key: ValueKey(item),
-                    child: ListTile(
-                      key: ValueKey(item),
-                      title: Container(
-                        color: Colors.cyan,
-                        height: 80,
-                        child: Center(
-                          child: Text(
-                            item,
-                            style: TextStyle(
-                              fontSize: 30,
+          StreamBuilder<dynamic>(
+            stream: storeCollection.snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text('Loading');
+              return Expanded(
+                child: Center(
+                  child: ReorderableListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    onReorder: reorderData,
+                    itemBuilder: (BuildContext context, int index) {
+                      var item = snapshot.data.docs[index]['itemName'];
+                      return Dismissible(
+                        key: ValueKey(item),
+                        child: ListTile(
+                          key: ValueKey(item),
+                          title: Container(
+                            color: Colors.cyan,
+                            height: 80,
+                            child: Center(
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
+                              ),
                             ),
                           ),
+                          onTap: () async {
+                            String editedValue = await _showEditDialogue(item);
+                            setState(() {
+                              widget.myItems[index] = editedValue;
+                            });
+                          },
                         ),
-                      ),
-                      onTap: () async {
-                        String editedValue = await _showEditDialogue(item);
-                        setState(() {
-                          widget.myItems[index] = editedValue;
-                        });
-                      },
-                    ),
-                    onDismissed: (direction) {
-                      setState(() {
-                        widget.myItems.removeAt(index);
-                      });
+                        onDismissed: (direction) {
+                          setState(() {
+                            widget.myItems.removeAt(index);
+                          });
+                        },
+                      );
                     },
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
           SizedBox(
             height: 70,
