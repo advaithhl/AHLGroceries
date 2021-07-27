@@ -84,7 +84,12 @@ class _StorePageState extends State<StorePage> {
           StreamBuilder<dynamic>(
             stream: storeCollection.snapshots(),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return const Text('Loading');
+              if (!snapshot.hasData)
+                return const Expanded(
+                  child: Center(
+                    child: Text('Loading'),
+                  ),
+                );
               return Expanded(
                 child: Center(
                   child: ReorderableListView.builder(
