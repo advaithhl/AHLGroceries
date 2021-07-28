@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ahl_groceries/database.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -14,6 +14,7 @@ class StorePage extends StatefulWidget {
 class _StorePageState extends State<StorePage> {
   late TextEditingController _newItemTextFieldController =
       TextEditingController();
+  final Database db = Database('testcoll');
 
   /// Update backend list on reordering.
   void reorderData(int oldIndex, int newIndex) {
@@ -66,8 +67,6 @@ class _StorePageState extends State<StorePage> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference storeCollection =
-        FirebaseFirestore.instance.collection('testcoll');
     return Scaffold(
       appBar: AppBar(
         title: Text("Second Route"),
@@ -82,7 +81,7 @@ class _StorePageState extends State<StorePage> {
       body: Column(
         children: [
           StreamBuilder<dynamic>(
-            stream: storeCollection.snapshots(),
+            stream: db.getStream(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return const Expanded(
@@ -93,10 +92,10 @@ class _StorePageState extends State<StorePage> {
               return Expanded(
                 child: Center(
                   child: ReorderableListView.builder(
-                    itemCount: snapshot.data.docs.length,
+                    itemCount: db.getSnapshotLength(snapshot),
                     onReorder: reorderData,
                     itemBuilder: (BuildContext context, int index) {
-                      var item = snapshot.data.docs[index]['itemName'];
+                      String item = db.getItemByIndex(snapshot, index);
                       return Dismissible(
                         key: ValueKey(item),
                         child: ListTile(
