@@ -34,8 +34,7 @@ class _StorePageState extends State<StorePage> {
   }
 
   Icon _getShareIcon() {
-    if (Platform.isAndroid) return Icon(Icons.share);
-    return Icon(Icons.ios_share);
+    return Icon(Platform.isAndroid ? Icons.share : Icons.ios_share);
   }
 
   Future<String> _showEditDialogue(String item) async {
