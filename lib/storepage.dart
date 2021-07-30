@@ -113,9 +113,7 @@ class _StorePageState extends State<StorePage> {
                           ),
                           onTap: () async {
                             String editedValue = await _showEditDialogue(item);
-                            setState(() {
-                              widget.myItems[index] = editedValue;
-                            });
+                            db.updateItemByIndex(snapshot, index, editedValue);
                           },
                         ),
                         onDismissed: (direction) {

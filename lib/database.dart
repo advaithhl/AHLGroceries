@@ -34,7 +34,19 @@ class Database {
     return getDocs(snapshot).length;
   }
 
+  DocumentSnapshot getDocByIndex(var snapshot, int index) {
+    return getDocs(snapshot)[index];
+  }
+
   String getItemByIndex(var snapshot, int index) {
-    return getDocs(snapshot)[index]['itemName'];
+    return getDocByIndex(snapshot, index)['itemName'];
+  }
+
+  void updateItemByIndex(var snapshot, int index, String newValue) {
+    getInstance().runTransaction((transaction) async {
+      DocumentSnapshot documentSnapshot =
+          await transaction.get(getDocByIndex(snapshot, index).reference);
+      transaction.update(documentSnapshot.reference, {'itemName': newValue});
+    });
   }
 }
