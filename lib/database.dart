@@ -49,4 +49,12 @@ class Database {
       transaction.update(documentSnapshot.reference, {'itemName': newValue});
     });
   }
+
+  void deleteItemByIndex(var snapshot, int index) {
+    getInstance().runTransaction((transaction) async {
+      DocumentSnapshot documentSnapshot =
+          await transaction.get(getDocByIndex(snapshot, index).reference);
+      transaction.delete(documentSnapshot.reference);
+    });
+  }
 }

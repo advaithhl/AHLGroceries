@@ -117,9 +117,7 @@ class _StorePageState extends State<StorePage> {
                           },
                         ),
                         onDismissed: (direction) {
-                          setState(() {
-                            widget.myItems.removeAt(index);
-                          });
+                          db.deleteItemByIndex(snapshot, index);
                         },
                       );
                     },
