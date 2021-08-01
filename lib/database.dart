@@ -50,11 +50,23 @@ class Database {
     });
   }
 
-  void deleteItemByIndex(var snapshot, int index) {
+  void deleteItemByIndex(int index) {
+    // get the instance, and run a transaction.
     getInstance().runTransaction((transaction) async {
-      DocumentSnapshot documentSnapshot =
-          await transaction.get(getDocByIndex(snapshot, index).reference);
-      transaction.delete(documentSnapshot.reference);
+      // get all docs whose 'index' field is greater than or equal to the
+      // index the index to be deleted. also fetch the item to be deleted, to
+      // delete in the next step. order by index, because, the deleted item
+      // will be the first item in the snapshot.
+      QuerySnapshot<dynamic> snapDocsFromIndex = await getCollection()
+          .where('index', isGreaterThanOrEqualTo: index)
+          .orderBy('index')
+          .get();
+      // iterate through documents, set index-- for all.
+      snapDocsFromIndex.docs.forEach((doc) =>
+          transaction.update(doc.reference, {'index': doc.get('index') - 1}));
+      // delete the first doc. this is the doc to delete, as the snapshot was
+      // ordered, while fetching.
+      transaction.delete(snapDocsFromIndex.docs.first.reference);
     });
   }
 }

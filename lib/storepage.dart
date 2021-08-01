@@ -117,7 +117,7 @@ class _StorePageState extends State<StorePage> {
                           },
                         ),
                         onDismissed: (direction) {
-                          db.deleteItemByIndex(snapshot, index);
+                          db.deleteItemByIndex(index);
                         },
                       );
                     },
