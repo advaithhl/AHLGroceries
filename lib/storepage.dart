@@ -139,7 +139,7 @@ class _StorePageState extends State<StorePage> {
                   border: OutlineInputBorder(),
                 ),
                 onSubmitted: (String text) {
-                  if (!widget.myItems.contains(text)) widget.myItems.add(text);
+                  db.addItem(text);
                   setState(() {
                     _newItemTextFieldController.text = '';
                   });

@@ -38,6 +38,13 @@ class Database {
     return getDocs(snapshot)[index];
   }
 
+  void addItem(String itemName) async {
+    int index = await getCollection()
+        .get()
+        .then((allDocsSnapshot) => allDocsSnapshot.docs.length);
+    getCollection().add({'index': index, 'itemName': itemName});
+  }
+
   String getItemByIndex(var snapshot, int index) {
     return getDocByIndex(snapshot, index)['itemName'];
   }
