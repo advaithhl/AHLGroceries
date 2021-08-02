@@ -16,17 +16,6 @@ class _StorePageState extends State<StorePage> {
       TextEditingController();
   final Database db = Database('testcoll');
 
-  /// Update backend list on reordering.
-  void reorderData(int oldIndex, int newIndex) {
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final items = widget.myItems.removeAt(oldIndex);
-      widget.myItems.insert(newIndex, items);
-    });
-  }
-
   /// Share the list, if user taps on share button.
   void shareList() {
     String shareText = widget.myItems.join("\n");
@@ -90,9 +79,8 @@ class _StorePageState extends State<StorePage> {
                 );
               return Expanded(
                 child: Center(
-                  child: ReorderableListView.builder(
+                  child: ListView.builder(
                     itemCount: db.getSnapshotLength(snapshot),
-                    onReorder: reorderData,
                     itemBuilder: (BuildContext context, int index) {
                       String item = db.getItemByIndex(snapshot, index);
                       return Dismissible(
