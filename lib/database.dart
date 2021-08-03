@@ -76,4 +76,36 @@ class Database {
       transaction.delete(snapDocsFromIndex.docs.first.reference);
     });
   }
+
+  void moveItemUp(int index) {
+    // move the item at index, one position up.
+    getInstance().runTransaction((transaction) async {
+      // get index and index-1 snapshots.
+      QuerySnapshot<dynamic> snapDocAndUp = await getCollection()
+          .where('index',
+              isGreaterThanOrEqualTo: index - 1, isLessThanOrEqualTo: index)
+          .orderBy('index')
+          .get();
+      // swap their indices.
+      transaction.update(snapDocAndUp.docs.first.reference, {'index': index});
+      transaction
+          .update(snapDocAndUp.docs.last.reference, {'index': index - 1});
+    });
+  }
+
+  void moveItemDown(int index) {
+    // move the item at index, one position down.
+    getInstance().runTransaction((transaction) async {
+      // get index and index+1 snapshots.
+      QuerySnapshot<dynamic> snapDocAndDown = await getCollection()
+          .where('index',
+              isGreaterThanOrEqualTo: index, isLessThanOrEqualTo: index + 1)
+          .orderBy('index')
+          .get();
+      // swap their indices.
+      transaction
+          .update(snapDocAndDown.docs.first.reference, {'index': index + 1});
+      transaction.update(snapDocAndDown.docs.last.reference, {'index': index});
+    });
+  }
 }

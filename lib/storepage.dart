@@ -90,13 +90,41 @@ class _StorePageState extends State<StorePage> {
                           title: Container(
                             color: Colors.cyan,
                             height: 80,
-                            child: Center(
-                              child: Text(
-                                item,
-                                style: TextStyle(
-                                  fontSize: 30,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 70,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      if (index != 0) {
+                                        db.moveItemUp(index);
+                                      }
+                                    },
+                                    icon: Icon(Icons.arrow_upward),
+                                  ),
                                 ),
-                              ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      item,
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 70,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      if (index !=
+                                          db.getSnapshotLength(snapshot) - 1)
+                                        db.moveItemDown(index);
+                                    },
+                                    icon: Icon(Icons.arrow_downward),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           onTap: () async {
