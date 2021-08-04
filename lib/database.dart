@@ -108,4 +108,15 @@ class Database {
       transaction.update(snapDocAndDown.docs.last.reference, {'index': index});
     });
   }
+
+  Future<List<String>> getShareTextList() async {
+    List<String> allItems = [];
+    await getCollection()
+        .get()
+        .then((allDocsSnapshot) => allDocsSnapshot.docs.forEach((doc) {
+              print(doc.get('itemName'));
+              allItems.add(doc.get('itemName'));
+            }));
+    return allItems;
+  }
 }

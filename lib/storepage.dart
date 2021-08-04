@@ -17,9 +17,19 @@ class _StorePageState extends State<StorePage> {
   final Database db = Database('testcoll');
 
   /// Share the list, if user taps on share button.
-  void shareList() {
-    String shareText = widget.myItems.join("\n");
-    Share.share(shareText);
+  void shareList() async {
+    List<String> shareTextList = await db.getShareTextList();
+    StringBuffer stringBuffer = StringBuffer();
+    for (int idx = 1; idx <= shareTextList.length; ++idx) {
+      stringBuffer.write('$idx. ${shareTextList[idx - 1]}\n');
+    }
+    String shareText = stringBuffer.toString();
+    if (shareText.isNotEmpty)
+      Share.share(stringBuffer.toString());
+    else
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: const Text('Please add items to share')),
+      );
   }
 
   Icon _getShareIcon() {
@@ -59,11 +69,10 @@ class _StorePageState extends State<StorePage> {
       appBar: AppBar(
         title: Text("Second Route"),
         actions: <Widget>[
-          if (widget.myItems.length != 0)
-            IconButton(
-              onPressed: shareList,
-              icon: _getShareIcon(),
-            ),
+          IconButton(
+            onPressed: shareList,
+            icon: _getShareIcon(),
+          ),
         ],
       ),
       body: Column(
