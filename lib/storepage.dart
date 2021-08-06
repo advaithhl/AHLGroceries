@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:ahl_groceries/database.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -30,10 +28,6 @@ class _StorePageState extends State<StorePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: const Text('Please add items to share')),
       );
-  }
-
-  Icon _getShareIcon() {
-    return Icon(Platform.isAndroid ? Icons.share : Icons.ios_share);
   }
 
   Future<String> _showEditDialogue(String item) async {
@@ -71,7 +65,7 @@ class _StorePageState extends State<StorePage> {
         actions: <Widget>[
           IconButton(
             onPressed: shareList,
-            icon: _getShareIcon(),
+            icon: Icon(Icons.share),
           ),
         ],
       ),
