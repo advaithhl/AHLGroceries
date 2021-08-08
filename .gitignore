@@ -47,4 +47,3 @@ app.*.map.json
 
 # Firebase
 google-services.json
-/web/app-secrets.js
