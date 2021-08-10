@@ -1,6 +1,6 @@
 # This workflow builds the production web app
 
-name: Deploy to Github Pages
+name: Build and deploy webapp to Github Pages
 
 on:
   push:
@@ -14,10 +14,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build
+
+      # Set up environment
+      - name: Setup environment
         uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.2.3'
+
+      # Build web app
+      - name: Build
+        run: |
+          flutter config --enable-web
+          flutter pub get
+          flutter build web --release
+
+      # Deploy to Github Pages
       - name: Deploy
         uses: s0/git-publish-subdir-action@develop
         env:
