@@ -1,6 +1,6 @@
 # This workflow builds the production web app
 
-name: Build and deploy webapp to Github Pages
+name: Deploy webapp to production
 
 on:
   push:
@@ -9,19 +9,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  production:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Set up environment
-      - name: Setup environment
+      - name: Set up environment
         uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.2.3'
 
-      # Build web app
       - name: Build
         run: |
           flutter config --enable-web
@@ -33,7 +32,7 @@ jobs:
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: self
-          BRANCH: gh-pages
+          BRANCH: deploy
           FOLDER: build/web
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: "Automatic deployment up to {sha} to production"
