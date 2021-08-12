@@ -92,7 +92,6 @@ class _StorePageState extends State<StorePage> {
                           key: ValueKey(item),
                           title: Container(
                             color: Colors.cyan,
-                            height: 80,
                             child: Row(
                               children: [
                                 Container(
