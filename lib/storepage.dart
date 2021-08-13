@@ -106,12 +106,11 @@ class _StorePageState extends State<StorePage> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      item,
-                                      style: TextStyle(
-                                        fontSize: 30,
-                                      ),
+                                  child: Text(
+                                    item,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
