@@ -13,6 +13,8 @@ class _StorePageState extends State<StorePage> {
   late TextEditingController _newItemTextFieldController =
       TextEditingController();
   final Database db = Database('testcoll');
+  final BorderRadius _listItemBorderRadius =
+      BorderRadius.all(Radius.circular(12.0));
 
   /// Share the list, if user taps on share button.
   void shareList() async {
@@ -93,8 +95,8 @@ class _StorePageState extends State<StorePage> {
                           title: PhysicalModel(
                             color: Colors.black,
                             elevation: 8.0,
+                            borderRadius: _listItemBorderRadius,
                             child: Container(
-                              color: Colors.cyan,
                               child: Row(
                                 children: [
                                   Container(
@@ -132,6 +134,10 @@ class _StorePageState extends State<StorePage> {
                                     ),
                                   ),
                                 ],
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.cyan,
+                                borderRadius: _listItemBorderRadius,
                               ),
                             ),
                           ),
