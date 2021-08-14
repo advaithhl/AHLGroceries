@@ -90,42 +90,49 @@ class _StorePageState extends State<StorePage> {
                         key: ValueKey(item),
                         child: ListTile(
                           key: ValueKey(item),
-                          title: Container(
-                            color: Colors.cyan,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 70,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      if (index != 0) {
-                                        db.moveItemUp(index);
-                                      }
-                                    },
-                                    icon: Icon(Icons.arrow_upward),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    item,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 30,
+                          title: PhysicalModel(
+                            color: Colors.black,
+                            elevation: 8.0,
+                            child: Container(
+                              color: Colors.cyan,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 70,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        if (index != 0) {
+                                          db.moveItemUp(index);
+                                        }
+                                      },
+                                      icon: Icon(Icons.arrow_upward),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  width: 70,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      if (index !=
-                                          db.getSnapshotLength(snapshot) - 1)
-                                        db.moveItemDown(index);
-                                    },
-                                    icon: Icon(Icons.arrow_downward),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(
+                                        item,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 30,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    width: 70,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        if (index !=
+                                            db.getSnapshotLength(snapshot) - 1)
+                                          db.moveItemDown(index);
+                                      },
+                                      icon: Icon(Icons.arrow_downward),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           onTap: () async {
