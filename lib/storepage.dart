@@ -79,7 +79,7 @@ class _StorePageState extends State<StorePage> {
               if (!snapshot.hasData)
                 return const Expanded(
                   child: Center(
-                    child: Text('Loading'),
+                    child: CircularProgressIndicator.adaptive(),
                   ),
                 );
               return Expanded(
