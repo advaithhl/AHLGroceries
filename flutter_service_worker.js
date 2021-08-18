@@ -13,7 +13,7 @@ const RESOURCES = {
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "manifest.json": "79f3f223c9df58868866d0c1a242f1e6",
 "version.json": "7911c9eafc362d005b4cfa92b0f141be",
-"main.dart.js": "de86d06f79db7cfebd0c0a859c3b8fe7",
+"main.dart.js": "cb0149e79084271f4a75e5c99e2432e6",
 "app-config.js": "0b789e82263791dcc5ff6d78e0717d2f",
 "splash/img/light-3x.png": "0e61d3e85c7127921f0120bc31ff41ee",
 "splash/img/light-4x.png": "e1a5be5f0c57765ffc069787aaa441b1",
@@ -24,8 +24,8 @@ const RESOURCES = {
 "splash/img/dark-3x.png": "0e61d3e85c7127921f0120bc31ff41ee",
 "splash/img/dark-4x.png": "e1a5be5f0c57765ffc069787aaa441b1",
 "splash/style.css": "18237f11fe07e5f18aedd20a2ce8d1df",
-"index.html": "0dae83a711273fc543024ef1a1034837",
-"/": "0dae83a711273fc543024ef1a1034837"
+"index.html": "0d5a6170b250ec88050e95579772956c",
+"/": "0d5a6170b250ec88050e95579772956c"
 };
 
 // The application shell files that are downloaded before a service worker can
