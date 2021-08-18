@@ -78,7 +78,8 @@ class StoreListPageItem extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => StorePage()),
+            MaterialPageRoute(
+                builder: (context) => StorePage(storeName: storeName)),
           );
         },
       ),

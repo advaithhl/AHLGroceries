@@ -4,6 +4,9 @@ import 'package:share_plus/share_plus.dart';
 
 class StorePage extends StatefulWidget {
   final List<String> myItems = [];
+  final String storeName;
+
+  StorePage({required this.storeName});
 
   @override
   _StorePageState createState() => _StorePageState();
@@ -12,9 +15,15 @@ class StorePage extends StatefulWidget {
 class _StorePageState extends State<StorePage> {
   late TextEditingController _newItemTextFieldController =
       TextEditingController();
-  final Database db = Database('testcoll');
+  late Database db;
   final BorderRadius _listItemBorderRadius =
       BorderRadius.all(Radius.circular(12.0));
+
+  @override
+  void initState() {
+    super.initState();
+    db = Database(widget.storeName);
+  }
 
   /// Share the list, if user taps on share button.
   void shareList() async {
@@ -63,7 +72,7 @@ class _StorePageState extends State<StorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Route"),
+        title: Text(widget.storeName),
         actions: <Widget>[
           IconButton(
             onPressed: shareList,
