@@ -5,6 +5,8 @@ import 'package:share_plus/share_plus.dart';
 class StorePage extends StatefulWidget {
   final List<String> myItems = [];
   final String storeName;
+  static const int VIEW_MODE = 0;
+  static const int EDIT_MODE = 1;
 
   StorePage({required this.storeName});
 
@@ -18,6 +20,7 @@ class _StorePageState extends State<StorePage> {
   late Database db;
   final BorderRadius _listItemBorderRadius =
       BorderRadius.all(Radius.circular(12.0));
+  int _amIEditing = StorePage.VIEW_MODE;
 
   @override
   void initState() {
@@ -68,6 +71,23 @@ class _StorePageState extends State<StorePage> {
     );
   }
 
+  FloatingActionButton _getFAB(String heroTag) {
+    return FloatingActionButton(
+      child: Center(
+        child:
+            Icon(_amIEditing == StorePage.VIEW_MODE ? Icons.edit : Icons.save),
+      ),
+      onPressed: () {
+        setState(() {
+          _amIEditing == StorePage.VIEW_MODE
+              ? _amIEditing = StorePage.EDIT_MODE
+              : _amIEditing = StorePage.VIEW_MODE;
+        });
+      },
+      heroTag: heroTag,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,23 +100,55 @@ class _StorePageState extends State<StorePage> {
           ),
         ],
       ),
-      body: Column(
+      body: IndexedStack(
+        index: _amIEditing,
         children: [
           StreamBuilder<dynamic>(
             stream: db.getStream(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
-                return const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
                 );
-              return Expanded(
-                child: Center(
-                  child: ListView.builder(
-                    itemCount: db.getSnapshotLength(snapshot),
+              return Center(
+                child: ListView.builder(
+                  itemCount: db.getSnapshotLength(snapshot),
+                  itemBuilder: (BuildContext context, int index) {
+                    String item = db.getItemByIndex(snapshot, index);
+                    return ListTile(
+                      key: ValueKey(item),
+                      title: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            item,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 30,
+                            ),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.cyan,
+                          borderRadius: _listItemBorderRadius,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: Scaffold(
+                  body: ReorderableListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: widget.myItems.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String item = db.getItemByIndex(snapshot, index);
+                      String item = widget.myItems[index];
                       return Dismissible(
                         key: ValueKey(item),
                         child: ListTile(
@@ -106,43 +158,15 @@ class _StorePageState extends State<StorePage> {
                             elevation: 8.0,
                             borderRadius: _listItemBorderRadius,
                             child: Container(
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 70,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        if (index != 0) {
-                                          db.moveItemUp(index);
-                                        }
-                                      },
-                                      icon: Icon(Icons.arrow_upward),
-                                    ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  item,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 30,
                                   ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Text(
-                                        item,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 70,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        if (index !=
-                                            db.getSnapshotLength(snapshot) - 1)
-                                          db.moveItemDown(index);
-                                      },
-                                      icon: Icon(Icons.arrow_downward),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.cyan,
@@ -152,41 +176,60 @@ class _StorePageState extends State<StorePage> {
                           ),
                           onTap: () async {
                             String editedValue = await _showEditDialogue(item);
-                            db.updateItemByIndex(snapshot, index, editedValue);
+                            setState(() {
+                              widget.myItems[index] = editedValue;
+                            });
                           },
                         ),
                         onDismissed: (direction) {
-                          db.deleteItemByIndex(index);
+                          setState(() {
+                            widget.myItems.removeAt(index);
+                          });
                         },
                       );
                     },
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = widget.myItems.removeAt(oldIndex);
+                        widget.myItems.insert(newIndex, item);
+                      });
+                      print(widget.myItems);
+                    },
+                  ),
+                  floatingActionButton: _getFAB('editModeFab'),
+                ),
+              ),
+              SizedBox(
+                height: 70,
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: _newItemTextFieldController,
+                    decoration: InputDecoration(
+                      labelText: 'Tap here to add new item',
+                      hintText: 'New item',
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: (String text) {
+                      db.addItem(text);
+                      setState(() {
+                        _newItemTextFieldController.text = '';
+                      });
+                    },
                   ),
                 ),
-              );
-            },
-          ),
-          SizedBox(
-            height: 70,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: _newItemTextFieldController,
-                decoration: InputDecoration(
-                  labelText: 'Tap here to add new item',
-                  hintText: 'New item',
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (String text) {
-                  db.addItem(text);
-                  setState(() {
-                    _newItemTextFieldController.text = '';
-                  });
-                },
               ),
-            ),
+            ],
           ),
         ],
+      ),
+      floatingActionButton: Visibility(
+        visible: _amIEditing == StorePage.VIEW_MODE ? true : false,
+        child: _getFAB('viewModeFab'),
       ),
     );
   }
