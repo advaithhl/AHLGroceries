@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Database {
@@ -8,6 +10,55 @@ class Database {
   Database(this.collectionPath) {
     this._instance = FirebaseFirestore.instance;
     this._collectionReference = this._instance.collection(collectionPath);
+  }
+
+  Future<bool> isSomeoneEditing(String storeName) async {
+    DocumentSnapshot documentSnapshot =
+        await getInstance().doc('/EditMode/$storeName').get();
+    return documentSnapshot.get('editingNow');
+  }
+
+  void changeEditMode(String storeName, bool editingNow) async {
+    DocumentSnapshot documentSnapshot =
+        await getInstance().doc('/EditMode/$storeName').get();
+    documentSnapshot.reference.set({'editingNow': editingNow});
+  }
+
+  Future<List<String>> getAllItems() async {
+    QuerySnapshot allDataSnap = await getCollection().orderBy('index').get();
+    List<String> allDataList = [];
+    allDataSnap.docs.forEach((document) {
+      allDataList.add(document.get('itemName'));
+    });
+    return allDataList;
+  }
+
+  void updateAllItems(List<String> updatedList) {
+    getInstance().runTransaction((transaction) async {
+      QuerySnapshot<dynamic> snapAllDocs =
+          await getCollection().orderBy('index').get();
+      int idx, listLength, snapLength;
+      listLength = updatedList.length;
+      snapLength = snapAllDocs.docs.length;
+      for (idx = 0; idx < min(listLength, snapLength); ++idx) {
+        transaction.update(
+            snapAllDocs.docs[idx].reference, {'itemName': updatedList[idx]});
+      }
+      if (listLength > snapLength) {
+        // items were added.
+        for (; idx < listLength; ++idx) {
+          transaction.set(getCollection().doc(), {
+            'index': idx,
+            'itemName': updatedList[idx],
+          });
+        }
+      } else {
+        //items were deleted.
+        for (; idx < snapLength; ++idx) {
+          transaction.delete(snapAllDocs.docs[idx].reference);
+        }
+      }
+    });
   }
 
   FirebaseFirestore getInstance() {

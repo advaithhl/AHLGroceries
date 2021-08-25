@@ -71,21 +71,23 @@ class _StorePageState extends State<StorePage> {
     );
   }
 
-  FloatingActionButton _getFAB(String heroTag) {
-    return FloatingActionButton(
-      child: Center(
-        child:
-            Icon(_amIEditing == StorePage.VIEW_MODE ? Icons.edit : Icons.save),
-      ),
-      onPressed: () {
-        setState(() {
-          _amIEditing == StorePage.VIEW_MODE
-              ? _amIEditing = StorePage.EDIT_MODE
-              : _amIEditing = StorePage.VIEW_MODE;
-        });
-      },
-      heroTag: heroTag,
-    );
+  Future<bool> _enterEditMode() async {
+    bool isSomeoneEditing = await db.isSomeoneEditing(widget.storeName);
+    if (!isSomeoneEditing) {
+      db.changeEditMode(widget.storeName, true);
+      widget.myItems.clear();
+      List<String> allItems = await db.getAllItems();
+      allItems.forEach((itemName) {
+        widget.myItems.add(itemName);
+      });
+      return true;
+    }
+    return false;
+  }
+
+  void _exitEditMode() {
+    db.updateAllItems(widget.myItems);
+    db.changeEditMode(widget.storeName, false);
   }
 
   @override
@@ -196,10 +198,20 @@ class _StorePageState extends State<StorePage> {
                         final item = widget.myItems.removeAt(oldIndex);
                         widget.myItems.insert(newIndex, item);
                       });
-                      print(widget.myItems);
                     },
                   ),
-                  floatingActionButton: _getFAB('editModeFab'),
+                  floatingActionButton: FloatingActionButton(
+                    child: Center(
+                      child: Icon(Icons.save),
+                    ),
+                    onPressed: () {
+                      _exitEditMode();
+                      setState(() {
+                        _amIEditing = StorePage.VIEW_MODE;
+                      });
+                    },
+                    heroTag: 'editFab',
+                  ),
                 ),
               ),
               SizedBox(
@@ -215,8 +227,8 @@ class _StorePageState extends State<StorePage> {
                       border: OutlineInputBorder(),
                     ),
                     onSubmitted: (String text) {
-                      db.addItem(text);
                       setState(() {
+                        widget.myItems.add(text);
                         _newItemTextFieldController.text = '';
                       });
                     },
@@ -229,7 +241,20 @@ class _StorePageState extends State<StorePage> {
       ),
       floatingActionButton: Visibility(
         visible: _amIEditing == StorePage.VIEW_MODE ? true : false,
-        child: _getFAB('viewModeFab'),
+        child: FloatingActionButton(
+          child: Center(
+            child: Icon(Icons.edit),
+          ),
+          onPressed: () async {
+            bool editAllowed = await _enterEditMode();
+            if (editAllowed) {
+              setState(() {
+                _amIEditing = StorePage.EDIT_MODE;
+              });
+            }
+          },
+          heroTag: 'viewFab',
+        ),
       ),
     );
   }
