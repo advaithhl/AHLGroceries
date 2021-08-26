@@ -112,9 +112,9 @@ class Database {
   Future<List<String>> getShareTextList() async {
     List<String> allItems = [];
     await getCollection()
+        .orderBy('index')
         .get()
         .then((allDocsSnapshot) => allDocsSnapshot.docs.forEach((doc) {
-              print(doc.get('itemName'));
               allItems.add(doc.get('itemName'));
             }));
     return allItems;
