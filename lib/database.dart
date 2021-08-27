@@ -9,6 +9,7 @@ class Database {
 
   Database(this.collectionPath) {
     this._instance = FirebaseFirestore.instance;
+    this._instance.enablePersistence();
     this._collectionReference = this._instance.collection(collectionPath);
   }
 
