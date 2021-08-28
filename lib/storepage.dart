@@ -90,6 +90,36 @@ class _StorePageState extends State<StorePage> {
     db.changeEditMode(widget.storeName, false);
   }
 
+  Future<bool> _onGoingBack() async {
+    if (_amIEditing == StorePage.EDIT_MODE) {
+      return await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Discard changes?'),
+                content: const Text('Do you want to leave without saving your '
+                    'changes?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      db.changeEditMode(widget.storeName, false);
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                ],
+              );
+            },
+          ) ??
+          false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,142 +132,146 @@ class _StorePageState extends State<StorePage> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _amIEditing,
-        children: [
-          StreamBuilder<dynamic>(
-            stream: db.getStream(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              return Center(
-                child: ListView.builder(
-                  itemCount: db.getSnapshotLength(snapshot),
-                  itemBuilder: (BuildContext context, int index) {
-                    String item = db.getItemByIndex(snapshot, index);
-                    return ListTile(
-                      key: ValueKey(item),
-                      title: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            item,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 30,
-                            ),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.cyan,
-                          borderRadius: _listItemBorderRadius,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-          Column(
-            children: [
-              Expanded(
-                child: Scaffold(
-                  body: ReorderableListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: widget.myItems.length,
+      body: WillPopScope(
+        onWillPop: _onGoingBack,
+        child: IndexedStack(
+          index: _amIEditing,
+          children: [
+            StreamBuilder<dynamic>(
+              stream: db.getStream(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                return Center(
+                  child: ListView.builder(
+                    itemCount: db.getSnapshotLength(snapshot),
                     itemBuilder: (BuildContext context, int index) {
-                      String item = widget.myItems[index];
-                      return Dismissible(
+                      String item = db.getItemByIndex(snapshot, index);
+                      return ListTile(
                         key: ValueKey(item),
-                        child: ListTile(
-                          key: ValueKey(item),
-                          title: PhysicalModel(
-                            color: Colors.black,
-                            elevation: 8.0,
-                            borderRadius: _listItemBorderRadius,
-                            child: Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  item,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.cyan,
-                                borderRadius: _listItemBorderRadius,
+                        title: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              item,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 30,
                               ),
                             ),
                           ),
-                          onTap: () async {
-                            String editedValue = await _showEditDialogue(item);
-                            setState(() {
-                              widget.myItems[index] = editedValue;
-                            });
-                          },
+                          decoration: BoxDecoration(
+                            color: Colors.cyan,
+                            borderRadius: _listItemBorderRadius,
+                          ),
                         ),
-                        onDismissed: (direction) {
-                          setState(() {
-                            widget.myItems.removeAt(index);
-                          });
-                        },
                       );
                     },
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (newIndex > oldIndex) {
-                          newIndex -= 1;
-                        }
-                        final item = widget.myItems.removeAt(oldIndex);
-                        widget.myItems.insert(newIndex, item);
-                      });
-                    },
                   ),
-                  floatingActionButton: FloatingActionButton(
-                    child: Center(
-                      child: Icon(Icons.save),
+                );
+              },
+            ),
+            Column(
+              children: [
+                Expanded(
+                  child: Scaffold(
+                    body: ReorderableListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: widget.myItems.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String item = widget.myItems[index];
+                        return Dismissible(
+                          key: ValueKey(item),
+                          child: ListTile(
+                            key: ValueKey(item),
+                            title: PhysicalModel(
+                              color: Colors.black,
+                              elevation: 8.0,
+                              borderRadius: _listItemBorderRadius,
+                              child: Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    item,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.cyan,
+                                  borderRadius: _listItemBorderRadius,
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              String editedValue =
+                                  await _showEditDialogue(item);
+                              setState(() {
+                                widget.myItems[index] = editedValue;
+                              });
+                            },
+                          ),
+                          onDismissed: (direction) {
+                            setState(() {
+                              widget.myItems.removeAt(index);
+                            });
+                          },
+                        );
+                      },
+                      onReorder: (oldIndex, newIndex) {
+                        setState(() {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = widget.myItems.removeAt(oldIndex);
+                          widget.myItems.insert(newIndex, item);
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      _exitEditMode();
-                      setState(() {
-                        _amIEditing = StorePage.VIEW_MODE;
-                      });
-                    },
-                    heroTag: 'editFab',
+                    floatingActionButton: FloatingActionButton(
+                      child: Center(
+                        child: Icon(Icons.save),
+                      ),
+                      onPressed: () {
+                        _exitEditMode();
+                        setState(() {
+                          _amIEditing = StorePage.VIEW_MODE;
+                        });
+                      },
+                      heroTag: 'editFab',
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 70,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextField(
-                    controller: _newItemTextFieldController,
-                    decoration: InputDecoration(
-                      labelText: 'Tap here to add new item',
-                      hintText: 'New item',
-                      border: OutlineInputBorder(),
+                SizedBox(
+                  height: 70,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextField(
+                      controller: _newItemTextFieldController,
+                      decoration: InputDecoration(
+                        labelText: 'Tap here to add new item',
+                        hintText: 'New item',
+                        border: OutlineInputBorder(),
+                      ),
+                      onSubmitted: (String text) {
+                        setState(() {
+                          widget.myItems.add(text);
+                          _newItemTextFieldController.text = '';
+                        });
+                      },
                     ),
-                    onSubmitted: (String text) {
-                      setState(() {
-                        widget.myItems.add(text);
-                        _newItemTextFieldController.text = '';
-                      });
-                    },
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: Visibility(
         visible: _amIEditing == StorePage.VIEW_MODE ? true : false,
