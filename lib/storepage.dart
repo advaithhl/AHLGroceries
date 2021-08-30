@@ -280,11 +280,44 @@ class _StorePageState extends State<StorePage> {
             child: Icon(Icons.edit),
           ),
           onPressed: () async {
-            bool editAllowed = await _enterEditMode();
-            if (editAllowed) {
-              setState(() {
-                _amIEditing = StorePage.EDIT_MODE;
-              });
+            bool editAllowed = false;
+            bool errorCaught = false;
+            try {
+              editAllowed = await _enterEditMode();
+            } catch (_) {
+              errorCaught = true;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('You seem to be offline. Please go '
+                      'online to edit items.'),
+                ),
+              );
+            }
+            if (!errorCaught) {
+              if (editAllowed) {
+                setState(() {
+                  _amIEditing = StorePage.EDIT_MODE;
+                });
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Someone else is editing'),
+                      content:
+                          const Text('Someone else is editing this list right '
+                              'now. Please wait for them to finish editing, '
+                              'before trying to edit yourself.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             }
           },
           heroTag: 'viewFab',

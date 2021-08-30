@@ -13,8 +13,9 @@ class Database {
   }
 
   Future<bool> isSomeoneEditing(String storeName) async {
-    DocumentSnapshot documentSnapshot =
-        await getInstance().doc('/EditMode/$storeName').get();
+    DocumentSnapshot documentSnapshot = await getInstance()
+        .doc('/EditMode/$storeName')
+        .get(GetOptions(source: Source.server));
     return documentSnapshot.get('editingNow');
   }
 
