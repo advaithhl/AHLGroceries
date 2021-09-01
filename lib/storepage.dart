@@ -247,11 +247,11 @@ class _StorePageState extends State<StorePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 70,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 70,
+                    width: double.infinity,
                     child: TextField(
                       controller: _newItemTextFieldController,
                       decoration: InputDecoration(
