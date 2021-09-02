@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ahl_groceries/database.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -16,10 +18,10 @@ class StorePage extends StatefulWidget {
 
 class _StorePageState extends State<StorePage> {
   late TextEditingController _newItemTextFieldController =
-      TextEditingController();
+  TextEditingController();
   late Database db;
   final BorderRadius _listItemBorderRadius =
-      BorderRadius.all(Radius.circular(12.0));
+  BorderRadius.all(Radius.circular(12.0));
   int _amIEditing = StorePage.VIEW_MODE;
 
   @override
@@ -46,7 +48,7 @@ class _StorePageState extends State<StorePage> {
 
   Future<String> _showEditDialogue(String item) async {
     late TextEditingController _editItemTextFieldController =
-        TextEditingController(text: item);
+    TextEditingController(text: item);
     return await showDialog(
       context: context,
       builder: (_) {
@@ -93,28 +95,28 @@ class _StorePageState extends State<StorePage> {
   Future<bool> _onGoingBack() async {
     if (_amIEditing == StorePage.EDIT_MODE) {
       return await showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Discard changes?'),
-                content: const Text('Do you want to leave without saving your '
-                    'changes?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      db.changeEditMode(widget.storeName, false);
-                      Navigator.of(context).pop(true);
-                    },
-                    child: const Text('Yes'),
-                  ),
-                ],
-              );
-            },
-          ) ??
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Discard changes?'),
+            content: const Text('Do you want to leave without saving your '
+                'changes?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  db.changeEditMode(widget.storeName, false);
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        },
+      ) ??
           false;
     }
     return true;
@@ -149,22 +151,34 @@ class _StorePageState extends State<StorePage> {
                     itemCount: db.getSnapshotLength(snapshot),
                     itemBuilder: (BuildContext context, int index) {
                       String item = db.getItemByIndex(snapshot, index);
-                      return ListTile(
-                        key: ValueKey(item),
-                        title: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              item,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 30,
+                      int indexField = db.getIndexFieldByIndex(snapshot, index);
+                      return Dismissible(
+                        // random keys are generated, as item is not deleted.
+                        key: ValueKey(index + Random().nextInt(100000)),
+                        onDismissed: (_) {
+                          var dismissedReference =
+                              db.getDocByIndex(snapshot, index).reference;
+                          db.deleteItemInStore(dismissedReference);
+                        },
+                        child: ListTile(
+                          key: ValueKey(item),
+                          title: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                item,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
                               ),
                             ),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.cyan,
-                            borderRadius: _listItemBorderRadius,
+                            decoration: BoxDecoration(
+                              color: (indexField > 16383)
+                                  ? Colors.grey
+                                  : Colors.cyan,
+                              borderRadius: _listItemBorderRadius,
+                            ),
                           ),
                         ),
                       );
@@ -210,7 +224,7 @@ class _StorePageState extends State<StorePage> {
                             ),
                             onTap: () async {
                               String editedValue =
-                                  await _showEditDialogue(item);
+                              await _showEditDialogue(item);
                               setState(() {
                                 widget.myItems[index] = editedValue;
                               });
@@ -305,9 +319,9 @@ class _StorePageState extends State<StorePage> {
                     return AlertDialog(
                       title: const Text('Someone else is editing'),
                       content:
-                          const Text('Someone else is editing this list right '
-                              'now. Please wait for them to finish editing, '
-                              'before trying to edit yourself.'),
+                      const Text('Someone else is editing this list right '
+                          'now. Please wait for them to finish editing, '
+                          'before trying to edit yourself.'),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),

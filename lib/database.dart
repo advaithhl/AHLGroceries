@@ -62,6 +62,25 @@ class Database {
     });
   }
 
+  int _getDismissedIndex() {
+    // number of milliseconds since epoch - number of milliseconds since
+    // beginning of month + 16384. 16384 is so that the first subtraction
+    // might yield 0, a conflicting index. Also, it's 2^14, so that's nice.
+    DateTime now = DateTime.now().toUtc();
+    DateTime beginning = DateTime.utc(now.year, now.month);
+    Duration duration = now.difference(beginning);
+    return duration.inMilliseconds + 16384;
+  }
+
+  void deleteItemInStore(DocumentReference documentReference) {
+    // deleting the item in the store DOES NOT actually delete the document.
+    // the document gets a large positive value as index, strictly greater
+    // than 2^14 - 1. this makes the document go to the bottom. only this
+    // document has to be updated. later, this will be deleted.
+    documentReference
+        .set({'index': _getDismissedIndex()}, SetOptions(merge: true));
+  }
+
   FirebaseFirestore getInstance() {
     return this._instance;
   }
@@ -95,6 +114,10 @@ class Database {
         .get()
         .then((allDocsSnapshot) => allDocsSnapshot.docs.length);
     getCollection().add({'index': index, 'itemName': itemName});
+  }
+
+  int getIndexFieldByIndex(var snapshot, int index) {
+    return getDocByIndex(snapshot, index)['index'];
   }
 
   String getItemByIndex(var snapshot, int index) {
