@@ -26,7 +26,10 @@ class Database {
   }
 
   Future<List<String>> getAllItems() async {
-    QuerySnapshot allDataSnap = await getCollection().orderBy('index').get();
+    QuerySnapshot allDataSnap = await getCollection()
+        .where('index', isLessThan: 16384)
+        .orderBy('index')
+        .get();
     List<String> allDataList = [];
     allDataSnap.docs.forEach((document) {
       allDataList.add(document.get('itemName'));
@@ -36,8 +39,10 @@ class Database {
 
   void updateAllItems(List<String> updatedList) {
     getInstance().runTransaction((transaction) async {
-      QuerySnapshot<dynamic> snapAllDocs =
-          await getCollection().orderBy('index').get();
+      QuerySnapshot<dynamic> snapAllDocs = await getCollection()
+          .where('index', isLessThan: 16384)
+          .orderBy('index')
+          .get();
       int idx, listLength, snapLength;
       listLength = updatedList.length;
       snapLength = snapAllDocs.docs.length;
