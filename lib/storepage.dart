@@ -18,10 +18,10 @@ class StorePage extends StatefulWidget {
 
 class _StorePageState extends State<StorePage> {
   late TextEditingController _newItemTextFieldController =
-  TextEditingController();
+      TextEditingController();
   late Database db;
   final BorderRadius _listItemBorderRadius =
-  BorderRadius.all(Radius.circular(12.0));
+      BorderRadius.all(Radius.circular(12.0));
   int _amIEditing = StorePage.VIEW_MODE;
 
   @override
@@ -48,7 +48,7 @@ class _StorePageState extends State<StorePage> {
 
   Future<String> _showEditDialogue(String item) async {
     late TextEditingController _editItemTextFieldController =
-    TextEditingController(text: item);
+        TextEditingController(text: item);
     return await showDialog(
       context: context,
       builder: (_) {
@@ -95,28 +95,28 @@ class _StorePageState extends State<StorePage> {
   Future<bool> _onGoingBack() async {
     if (_amIEditing == StorePage.EDIT_MODE) {
       return await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Discard changes?'),
-            content: const Text('Do you want to leave without saving your '
-                'changes?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  db.changeEditMode(widget.storeName, false);
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
-        },
-      ) ??
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Discard changes?'),
+                content: const Text('Do you want to leave without saving your '
+                    'changes?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      db.changeEditMode(widget.storeName, false);
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                ],
+              );
+            },
+          ) ??
           false;
     }
     return true;
@@ -224,7 +224,7 @@ class _StorePageState extends State<StorePage> {
                             ),
                             onTap: () async {
                               String editedValue =
-                              await _showEditDialogue(item);
+                                  await _showEditDialogue(item);
                               setState(() {
                                 widget.myItems[index] = editedValue;
                               });
@@ -319,9 +319,9 @@ class _StorePageState extends State<StorePage> {
                     return AlertDialog(
                       title: const Text('Someone else is editing'),
                       content:
-                      const Text('Someone else is editing this list right '
-                          'now. Please wait for them to finish editing, '
-                          'before trying to edit yourself.'),
+                          const Text('Someone else is editing this list right '
+                              'now. Please wait for them to finish editing, '
+                              'before trying to edit yourself.'),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
