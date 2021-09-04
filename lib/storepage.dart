@@ -170,6 +170,9 @@ class _StorePageState extends State<StorePage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 30,
+                                  decoration: (indexField > 16383)
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
                                 ),
                               ),
                             ),
