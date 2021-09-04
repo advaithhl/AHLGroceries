@@ -47,8 +47,13 @@ class Database {
       listLength = updatedList.length;
       snapLength = snapAllDocs.docs.length;
       for (idx = 0; idx < min(listLength, snapLength); ++idx) {
-        transaction.update(
-            snapAllDocs.docs[idx].reference, {'itemName': updatedList[idx]});
+        // update all index values with the list's "actual" indices.
+        // this is so as to rectify gaps introduced by dismissing items
+        // outside edit mode.
+        transaction.update(snapAllDocs.docs[idx].reference, {
+          'index': idx,
+          'itemName': updatedList[idx],
+        });
       }
       if (listLength > snapLength) {
         // items were added.
