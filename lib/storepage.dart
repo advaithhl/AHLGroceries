@@ -129,6 +129,10 @@ class _StorePageState extends State<StorePage> {
         title: Text(widget.storeName),
         actions: <Widget>[
           IconButton(
+            onPressed: db.deleteDismissedItems,
+            icon: Icon(Icons.delete),
+          ),
+          IconButton(
             onPressed: shareList,
             icon: Icon(Icons.share),
           ),

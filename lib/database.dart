@@ -91,6 +91,15 @@ class Database {
         .set({'index': _getDismissedIndex()}, SetOptions(merge: true));
   }
 
+  void deleteDismissedItems() async {
+    QuerySnapshot dismissedItems = await getCollection()
+        .where('index', isGreaterThanOrEqualTo: 16384)
+        .get();
+    dismissedItems.docs.forEach((doc) {
+      doc.reference.delete();
+    });
+  }
+
   FirebaseFirestore getInstance() {
     return this._instance;
   }
