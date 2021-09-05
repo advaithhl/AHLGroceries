@@ -3,22 +3,22 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
-"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
-"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-"assets/NOTICES": "955ac5f2ffd6619fcdc9babe03ad9c09",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"manifest.json": "79f3f223c9df58868866d0c1a242f1e6",
-"version.json": "7911c9eafc362d005b4cfa92b0f141be",
-"main.dart.js": "ce0efc31fb011144fae266fc8adcb562",
-"app-config.js": "0b789e82263791dcc5ff6d78e0717d2f",
-"splash/img/splash.png": "bac48171b33922a893dd37cce21e721f",
+  "main.dart.js": "ffd74eee4f339a27d996f9383a279df7",
 "splash/style.css": "82190d2b807c8eead8bc732eb1bea4aa",
-"index.html": "e373f165b13f3a07b44b0cc0dea66c6d",
-"/": "e373f165b13f3a07b44b0cc0dea66c6d"
+"splash/img/splash.png": "bac48171b33922a893dd37cce21e721f",
+"version.json": "7911c9eafc362d005b4cfa92b0f141be",
+"manifest.json": "79f3f223c9df58868866d0c1a242f1e6",
+"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
+"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
+"app-config.js": "0b789e82263791dcc5ff6d78e0717d2f",
+"index.html": "9d45ea2c8e2743e38135ff6249182deb",
+"/": "9d45ea2c8e2743e38135ff6249182deb",
+"assets/NOTICES": "34dcd131b1ede2825e5f01cb1788bd1b",
+"assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
+"assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
+"assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
+"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
+"favicon.png": "5dcef449791fa27946b3d35ad8803796"
 };
 
 // The application shell files that are downloaded before a service worker can
