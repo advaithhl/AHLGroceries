@@ -100,6 +100,11 @@ class Database {
     });
   }
 
+  void moveItem(String toMoveItem, String toMoveStore) {
+    Database toMoveDB = Database(toMoveStore);
+    toMoveDB.addItem(toMoveItem);
+  }
+
   FirebaseFirestore getInstance() {
     return this._instance;
   }
@@ -130,6 +135,7 @@ class Database {
 
   void addItem(String itemName) async {
     int index = await getCollection()
+        .where('index', isLessThan: 16384)
         .get()
         .then((allDocsSnapshot) => allDocsSnapshot.docs.length);
     getCollection().add({'index': index, 'itemName': itemName});

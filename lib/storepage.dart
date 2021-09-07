@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ahl_groceries/database.dart';
+import 'package:ahl_groceries/main.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -44,6 +45,43 @@ class _StorePageState extends State<StorePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: const Text('Please add items to share')),
       );
+  }
+
+  Future<bool> showForwardDialogue(String toMoveItem) async {
+    return await showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Move item'),
+                content: Container(
+                  width: double.minPositive,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (String toMoveStore in StoreListPage.stores)
+                        ListTile(
+                          title: Center(
+                            child: Text(
+                              toMoveStore,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          onTap: () {
+                            db.moveItem(toMoveItem, toMoveStore);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Item moved to $toMoveStore.'),
+                              ),
+                            );
+                            Navigator.of(context).pop(true);
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }) ??
+        false;
   }
 
   Future<String> _showEditDialogue(String item) async {
@@ -208,26 +246,39 @@ class _StorePageState extends State<StorePage> {
                           key: ValueKey(item),
                           child: ListTile(
                             key: ValueKey(item),
-                            title: PhysicalModel(
-                              color: Colors.black,
-                              elevation: 8.0,
-                              borderRadius: _listItemBorderRadius,
-                              child: Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    item,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 30,
+                            title: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(
+                                        item,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 30,
+                                        ),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.cyan,
+                                      borderRadius: _listItemBorderRadius,
                                     ),
                                   ),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: Colors.cyan,
-                                  borderRadius: _listItemBorderRadius,
+                                IconButton(
+                                  icon: Icon(Icons.forward),
+                                  onPressed: () async {
+                                    bool moveConfirmed =
+                                        await showForwardDialogue(item);
+                                    if (moveConfirmed) {
+                                      setState(() {
+                                        widget.myItems.removeAt(index);
+                                      });
+                                    }
+                                  },
                                 ),
-                              ),
+                              ],
                             ),
                             onTap: () async {
                               String editedValue =
