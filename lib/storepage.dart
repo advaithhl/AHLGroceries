@@ -24,6 +24,7 @@ class _StorePageState extends State<StorePage> {
   final BorderRadius _listItemBorderRadius =
       BorderRadius.all(Radius.circular(12.0));
   int _amIEditing = StorePage.VIEW_MODE;
+  String newItemName = '';
 
   @override
   void initState() {
@@ -326,15 +327,28 @@ class _StorePageState extends State<StorePage> {
                     width: double.infinity,
                     child: TextField(
                       controller: _newItemTextFieldController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
+                        suffixIcon: newItemName.isNotEmpty
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    widget.myItems.add(newItemName);
+                                    newItemName = '';
+                                    _newItemTextFieldController.clear();
+                                  });
+                                },
+                                icon: Icon(Icons.send),
+                              )
+                            : null,
                         labelText: 'Tap here to add new item',
                         hintText: 'New item',
                         border: OutlineInputBorder(),
                       ),
-                      onSubmitted: (String text) {
+                      onEditingComplete: () {},
+                      onChanged: (String text) {
                         setState(() {
-                          widget.myItems.add(text);
-                          _newItemTextFieldController.text = '';
+                          newItemName = text;
                         });
                       },
                     ),
