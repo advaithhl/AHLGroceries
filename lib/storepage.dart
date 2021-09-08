@@ -204,7 +204,7 @@ class _StorePageState extends State<StorePage> {
                           db.deleteItemInStore(dismissedReference);
                         },
                         child: ListTile(
-                          key: ValueKey(item),
+                          key: ValueKey(index),
                           title: Container(
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -244,9 +244,9 @@ class _StorePageState extends State<StorePage> {
                       itemBuilder: (BuildContext context, int index) {
                         String item = widget.myItems[index];
                         return Dismissible(
-                          key: ValueKey(item),
+                          key: ValueKey(index),
                           child: ListTile(
-                            key: ValueKey(item),
+                            key: ValueKey(index),
                             title: Row(
                               children: [
                                 Expanded(
