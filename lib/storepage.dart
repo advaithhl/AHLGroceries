@@ -251,15 +251,45 @@ class _StorePageState extends State<StorePage> {
                               children: [
                                 Expanded(
                                   child: Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Text(
-                                        item,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 30,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 70,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                widget.myItems
+                                                    .insert(index, '');
+                                              });
+                                            },
+                                            icon: Icon(Icons.arrow_upward),
+                                          ),
                                         ),
-                                      ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              item,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 30,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 70,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                widget.myItems
+                                                    .insert(index + 1, '');
+                                              });
+                                            },
+                                            icon: Icon(Icons.arrow_downward),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     decoration: BoxDecoration(
                                       color: Colors.cyan,
