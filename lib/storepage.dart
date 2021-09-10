@@ -131,33 +131,8 @@ class _StorePageState extends State<StorePage> {
     db.changeEditMode(widget.storeName, false);
   }
 
-  Future<bool> _onGoingBack() async {
-    if (_amIEditing == StorePage.EDIT_MODE) {
-      return await showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Discard changes?'),
-                content: const Text('Do you want to leave without saving your '
-                    'changes?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      db.changeEditMode(widget.storeName, false);
-                      Navigator.of(context).pop(true);
-                    },
-                    child: const Text('Yes'),
-                  ),
-                ],
-              );
-            },
-          ) ??
-          false;
-    }
+  Future<bool> saveOnGoingBack() async {
+    if (_amIEditing == StorePage.EDIT_MODE) _exitEditMode();
     return true;
   }
 
@@ -178,7 +153,7 @@ class _StorePageState extends State<StorePage> {
         ],
       ),
       body: WillPopScope(
-        onWillPop: _onGoingBack,
+        onWillPop: saveOnGoingBack,
         child: IndexedStack(
           index: _amIEditing,
           children: [
@@ -335,18 +310,6 @@ class _StorePageState extends State<StorePage> {
                           widget.myItems.insert(newIndex, item);
                         });
                       },
-                    ),
-                    floatingActionButton: FloatingActionButton(
-                      child: Center(
-                        child: Icon(Icons.save),
-                      ),
-                      onPressed: () {
-                        _exitEditMode();
-                        setState(() {
-                          _amIEditing = StorePage.VIEW_MODE;
-                        });
-                      },
-                      heroTag: 'editFab',
                     ),
                   ),
                 ),
