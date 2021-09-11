@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ahl_groceries/database.dart';
 import 'package:ahl_groceries/main.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +110,44 @@ class _StorePageState extends State<StorePage> {
     );
   }
 
+  Future<void> showItemExistsDialogue() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('This item already exists'),
+          content: const Text(
+              'The item which you just entered already exists in the list.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getNewItemInBetween() {
+    int counter = 1;
+    String newItemNameStart = 'New item';
+    while (widget.myItems.contains('$newItemNameStart $counter')) counter++;
+    return '$newItemNameStart $counter';
+  }
+
+  void manageNewItem() {
+    if (!widget.myItems.contains(newItemName)) {
+      setState(() {
+        widget.myItems.add(newItemName);
+        newItemName = '';
+        _newItemTextFieldController.clear();
+      });
+    } else {
+      showItemExistsDialogue();
+    }
+  }
+
   Future<bool> _enterEditMode() async {
     bool isSomeoneEditing = await db.isSomeoneEditing(widget.storeName);
     if (!isSomeoneEditing) {
@@ -171,15 +207,14 @@ class _StorePageState extends State<StorePage> {
                       String item = db.getItemByIndex(snapshot, index);
                       int indexField = db.getIndexFieldByIndex(snapshot, index);
                       return Dismissible(
-                        // random keys are generated, as item is not deleted.
-                        key: ValueKey(index + Random().nextInt(100000)),
+                        key: ValueKey(indexField),
                         onDismissed: (_) {
                           var dismissedReference =
                               db.getDocByIndex(snapshot, index).reference;
                           db.deleteItemInStore(dismissedReference);
                         },
                         child: ListTile(
-                          key: ValueKey(index),
+                          key: ValueKey(indexField),
                           title: Container(
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -219,9 +254,9 @@ class _StorePageState extends State<StorePage> {
                       itemBuilder: (BuildContext context, int index) {
                         String item = widget.myItems[index];
                         return Dismissible(
-                          key: ValueKey(index),
+                          key: ValueKey(item),
                           child: ListTile(
-                            key: ValueKey(index),
+                            key: ValueKey(item),
                             title: Row(
                               children: [
                                 Expanded(
@@ -232,9 +267,11 @@ class _StorePageState extends State<StorePage> {
                                           width: 70,
                                           child: IconButton(
                                             onPressed: () {
+                                              String newItem =
+                                                  _getNewItemInBetween();
                                               setState(() {
                                                 widget.myItems
-                                                    .insert(index, '');
+                                                    .insert(index, newItem);
                                               });
                                             },
                                             icon: Icon(Icons.arrow_upward),
@@ -256,9 +293,11 @@ class _StorePageState extends State<StorePage> {
                                           width: 70,
                                           child: IconButton(
                                             onPressed: () {
+                                              String newItem =
+                                                  _getNewItemInBetween();
                                               setState(() {
                                                 widget.myItems
-                                                    .insert(index + 1, '');
+                                                    .insert(index + 1, newItem);
                                               });
                                             },
                                             icon: Icon(Icons.arrow_downward),
@@ -324,13 +363,7 @@ class _StorePageState extends State<StorePage> {
                       decoration: InputDecoration(
                         suffixIcon: newItemName.isNotEmpty
                             ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    widget.myItems.add(newItemName);
-                                    newItemName = '';
-                                    _newItemTextFieldController.clear();
-                                  });
-                                },
+                                onPressed: manageNewItem,
                                 icon: Icon(Icons.send),
                               )
                             : null,
