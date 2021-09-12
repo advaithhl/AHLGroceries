@@ -176,17 +176,25 @@ class _StorePageState extends State<StorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.storeName),
-        actions: <Widget>[
-          IconButton(
-            onPressed: db.deleteDismissedItems,
-            icon: Icon(Icons.delete),
-          ),
-          IconButton(
-            onPressed: shareList,
-            icon: Icon(Icons.share),
-          ),
-        ],
+        title: _amIEditing == StorePage.VIEW_MODE
+            ? Text(widget.storeName)
+            : Text('${widget.storeName} - Editing'),
+        backgroundColor:
+            _amIEditing == StorePage.VIEW_MODE ? Colors.green : Colors.red,
+        // show actions only in view mode.
+        actions: _amIEditing == StorePage.VIEW_MODE
+            ? <Widget>[
+                IconButton(
+                  onPressed: db.deleteDismissedItems,
+                  icon: Icon(Icons.delete),
+                ),
+                IconButton(
+                  onPressed: shareList,
+                  icon: Icon(Icons.share),
+                ),
+              ]
+            : null,
+        centerTitle: true,
       ),
       body: WillPopScope(
         onWillPop: saveOnGoingBack,
