@@ -87,27 +87,31 @@ class _StorePageState extends State<StorePage> {
     late TextEditingController _editItemTextFieldController =
         TextEditingController(text: item);
     return await showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: const Text('Edit item'),
-          content: TextField(
-            controller: _editItemTextFieldController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(_editItemTextFieldController.text);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Edit item'),
+              content: TextField(
+                autofocus: true,
+                textCapitalization: TextCapitalization.sentences,
+                controller: _editItemTextFieldController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(_editItemTextFieldController.text);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        item;
   }
 
   Future<void> showItemExistsDialogue() async {
