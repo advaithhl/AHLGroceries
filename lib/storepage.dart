@@ -6,8 +6,8 @@ import 'package:share_plus/share_plus.dart';
 class StorePage extends StatefulWidget {
   final List<String> myItems = [];
   final String storeName;
-  static const int VIEW_MODE = 0;
-  static const int EDIT_MODE = 1;
+  static const int STORE_MODE = 0;
+  static const int HOME_MODE = 1;
 
   StorePage({required this.storeName});
 
@@ -21,7 +21,7 @@ class _StorePageState extends State<StorePage> {
   late Database db;
   final BorderRadius _listItemBorderRadius =
       BorderRadius.all(Radius.circular(12.0));
-  int _amIEditing = StorePage.VIEW_MODE;
+  int _amIEditing = StorePage.STORE_MODE;
   String newItemName = '';
 
   @override
@@ -172,7 +172,7 @@ class _StorePageState extends State<StorePage> {
   }
 
   Future<bool> saveOnGoingBack() async {
-    if (_amIEditing == StorePage.EDIT_MODE) _exitEditMode();
+    if (_amIEditing == StorePage.HOME_MODE) _exitEditMode();
     return true;
   }
 
@@ -180,13 +180,13 @@ class _StorePageState extends State<StorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _amIEditing == StorePage.VIEW_MODE
+        title: _amIEditing == StorePage.STORE_MODE
             ? Text(widget.storeName)
             : Text('${widget.storeName} - Editing'),
         backgroundColor:
-            _amIEditing == StorePage.VIEW_MODE ? Colors.green : Colors.red,
-        // show actions only in view mode.
-        actions: _amIEditing == StorePage.VIEW_MODE
+            _amIEditing == StorePage.STORE_MODE ? Colors.green : Colors.red,
+        // show actions only in store mode.
+        actions: _amIEditing == StorePage.STORE_MODE
             ? <Widget>[
                 IconButton(
                   onPressed: db.deleteDismissedItems,
@@ -416,7 +416,7 @@ class _StorePageState extends State<StorePage> {
         ),
       ),
       floatingActionButton: Visibility(
-        visible: _amIEditing == StorePage.VIEW_MODE ? true : false,
+        visible: _amIEditing == StorePage.STORE_MODE ? true : false,
         child: FloatingActionButton(
           child: Center(
             child: Icon(Icons.edit),
@@ -438,7 +438,7 @@ class _StorePageState extends State<StorePage> {
             if (!errorCaught) {
               if (editAllowed) {
                 setState(() {
-                  _amIEditing = StorePage.EDIT_MODE;
+                  _amIEditing = StorePage.HOME_MODE;
                 });
               } else {
                 showDialog(
@@ -462,7 +462,7 @@ class _StorePageState extends State<StorePage> {
               }
             }
           },
-          heroTag: 'viewFab',
+          heroTag: 'storeFab',
         ),
       ),
     );
