@@ -64,7 +64,6 @@ class StoreListPageItem extends StatelessWidget {
     return Expanded(
       child: OpenContainer(
           transitionType: ContainerTransitionType.fadeThrough,
-          middleColor: Colors.blue,
           closedBuilder: (_, __) {
             return InkWell(
               child: Container(
