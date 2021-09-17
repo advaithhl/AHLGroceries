@@ -258,128 +258,124 @@ class _StorePageState extends State<StorePage> {
             Column(
               children: [
                 Expanded(
-                  child: Scaffold(
-                    body: ReorderableListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: widget.myItems.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String item = widget.myItems[index];
-                        return Dismissible(
+                  child: ReorderableListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: widget.myItems.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String item = widget.myItems[index];
+                      return Dismissible(
+                        key: ValueKey(item),
+                        child: ListTile(
                           key: ValueKey(item),
-                          child: ListTile(
-                            key: ValueKey(item),
-                            title: Container(
-                              child: Column(
-                                children: [
-                                  Material(
-                                    elevation: 4,
-                                    child: Container(
-                                      color: Colors.cyan,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 70,
-                                            child: IconButton(
-                                              onPressed: () {
-                                                String newItem =
-                                                    _getNewItemInBetween();
-                                                setState(() {
-                                                  widget.myItems
-                                                      .insert(index, newItem);
-                                                });
-                                              },
-                                              icon: Icon(Icons.arrow_upward),
-                                            ),
+                          title: Container(
+                            child: Column(
+                              children: [
+                                Material(
+                                  elevation: 4,
+                                  child: Container(
+                                    color: Colors.cyan,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 70,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              String newItem =
+                                                  _getNewItemInBetween();
+                                              setState(() {
+                                                widget.myItems
+                                                    .insert(index, newItem);
+                                              });
+                                            },
+                                            icon: Icon(Icons.arrow_upward),
                                           ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Text(
-                                                item,
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 30,
-                                                ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              item,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 30,
                                               ),
                                             ),
                                           ),
-                                          Container(
-                                            width: 70,
-                                            child: IconButton(
-                                              onPressed: () {
-                                                String newItem =
-                                                    _getNewItemInBetween();
-                                                setState(() {
-                                                  widget.myItems.insert(
-                                                      index + 1, newItem);
-                                                });
-                                              },
-                                              icon: Icon(Icons.arrow_downward),
-                                            ),
+                                        ),
+                                        Container(
+                                          width: 70,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              String newItem =
+                                                  _getNewItemInBetween();
+                                              setState(() {
+                                                widget.myItems
+                                                    .insert(index + 1, newItem);
+                                              });
+                                            },
+                                            icon: Icon(Icons.arrow_downward),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: IconButton(
-                                      icon: Icon(Icons.forward),
-                                      onPressed: () async {
-                                        bool moveConfirmed =
-                                            await showForwardDialogue(item);
-                                        if (moveConfirmed) {
-                                          setState(() {
-                                            widget.myItems.removeAt(index);
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.pink[600],
-                                borderRadius: BorderRadius.horizontal(
-                                  right: Radius.circular(12.0),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: IconButton(
+                                    icon: Icon(Icons.forward),
+                                    onPressed: () async {
+                                      bool moveConfirmed =
+                                          await showForwardDialogue(item);
+                                      if (moveConfirmed) {
+                                        setState(() {
+                                          widget.myItems.removeAt(index);
+                                        });
+                                      }
+                                    },
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            onTap: () async {
-                              String editedValue =
-                                  await _showEditDialogue(item);
-                              setState(() {
-                                widget.myItems[index] = editedValue;
-                              });
-                            },
+                            decoration: BoxDecoration(
+                              color: Colors.pink[600],
+                              borderRadius: BorderRadius.horizontal(
+                                right: Radius.circular(12.0),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
                           ),
-                          onDismissed: (direction) {
+                          onTap: () async {
+                            String editedValue = await _showEditDialogue(item);
                             setState(() {
-                              widget.myItems.removeAt(index);
+                              widget.myItems[index] = editedValue;
                             });
                           },
-                        );
-                      },
-                      onReorder: (oldIndex, newIndex) {
-                        setState(() {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
-                          }
-                          final item = widget.myItems.removeAt(oldIndex);
-                          widget.myItems.insert(newIndex, item);
-                        });
-                      },
-                    ),
+                        ),
+                        onDismissed: (direction) {
+                          setState(() {
+                            widget.myItems.removeAt(index);
+                          });
+                        },
+                      );
+                    },
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = widget.myItems.removeAt(oldIndex);
+                        widget.myItems.insert(newIndex, item);
+                      });
+                    },
                   ),
                 ),
                 Padding(
