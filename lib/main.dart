@@ -34,7 +34,6 @@ class StoreListPage extends StatelessWidget {
   static const List<String> stores = [
     'Daily Angadi',
     'Lulu',
-    'Farm Mart',
     'Supreme',
     'Worldmart',
     'Farmers',
