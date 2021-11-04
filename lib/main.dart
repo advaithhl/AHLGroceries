@@ -16,6 +16,8 @@ void main() async {
   runApp(AHLGroceries());
 }
 
+/// Main home screen.
+// This holds the [StoreListPage].
 class AHLGroceries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
