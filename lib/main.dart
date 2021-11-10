@@ -65,6 +65,9 @@ class StoreListPageItem extends StatelessWidget {
 
   const StoreListPageItem(this.storeName);
 
+  // Here, we use the ContainerTransform animation to animate the item to
+  // store page. In OpenContainer, we use closedBuilder and openBuilder callbacks
+  // to do so, as follows.
   @override
   Widget build(BuildContext context) {
     return Expanded(
