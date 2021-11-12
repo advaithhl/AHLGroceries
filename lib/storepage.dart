@@ -3,6 +3,7 @@ import 'package:ahl_groceries/main.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+/// This is the place where all the action takes place. :P
 class StorePage extends StatefulWidget {
   final List<String> myItems = [];
   final String storeName;
