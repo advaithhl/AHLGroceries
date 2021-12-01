@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// This class acts as an abstraction to Firestore.
 /// All database operations are defined here.
-/// There must be no database operation whihc is performed in the app
-/// which is not present here.
+/// There must be no isolated database operation anywhere else in the app.
 class Database {
   late FirebaseFirestore _instance;
   final String collectionPath;
