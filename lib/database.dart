@@ -153,7 +153,9 @@ class Database {
   }
 
   void updateItemByIndex(var snapshot, int index, String newValue) {
+    // get the instance, and run a transation.
     getInstance().runTransaction((transaction) async {
+      // get a snapshot of the document and update the item within the transation.
       DocumentSnapshot documentSnapshot =
           await transaction.get(getDocByIndex(snapshot, index).reference);
       transaction.update(documentSnapshot.reference, {'itemName': newValue});
