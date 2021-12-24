@@ -214,6 +214,7 @@ class Database {
     });
   }
 
+  // Order items by the index, and append items to a list, and return this list.
   Future<List<String>> getShareTextList() async {
     List<String> allItems = [];
     await getCollection()
